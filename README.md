@@ -26,7 +26,8 @@ From here, you can convert a PKM file:
 
 Or you can convert a PNG image:
 
-    my_pkm_img = open('/path/to/image.png', 'r').read()
+    # if on Windows, make sure to open in binary mode
+    my_pkm_img = open('/path/to/image.png', 'rb').read()
     my_pkm = pkm2png.png2pkm(my_pkm_img)
     with open('/path/to/pokemonfile.pkm', 'w') as f:
         f.write(my_pkm[1])

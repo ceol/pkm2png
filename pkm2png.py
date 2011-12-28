@@ -1,5 +1,6 @@
 import struct
 from StringIO import StringIO
+from itertools import count
 from PIL import Image, ImageDraw
 
 def _pack(data):
@@ -47,9 +48,10 @@ def pkm2png(gen, data):
     pixels.append((gen,terminator,0,0))
 
     for i in count(start=0, step=4):
-        if (i + 4) == (terminator - 1):
+        if i >= length:
             break
-        pixels.append(data[i])
+        pixel = (data[i], data[i+1], data[i+2], data[i+3])
+        pixels.append(pixel)
     
     width = 10
     height = 6
@@ -102,6 +104,8 @@ def png2pkm(data):
     # to open.
     imgbuffer = StringIO()
     imgbuffer.write(data)
+    # make sure you're at the beginning of the buffer
+    imgbuffer.seek(0)
 
     imgobj = Image.open(imgbuffer)
     pixels = list(imgobj.getdata())
