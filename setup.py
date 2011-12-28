@@ -11,4 +11,5 @@ setup(name='pkm2png',
       keywords=['pkm', 'pokemon', 'image', 'png'],
       url='https://github.org/ceol/pkm2png',
       packages=['pkm2png'],
+      requires=['PIL>=1.1.7']
      )
