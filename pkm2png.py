@@ -1,12 +1,12 @@
-from struct import pack, unpack
+import struct
 from StringIO import StringIO
 from PIL import Image, ImageDraw
 
 def _pack(data):
-    return pack('<' + ('B' * len(data)), data)
+    return struct.pack('<' + ('B' * len(data)), data)
 
 def _unpack(data):
-    return unpack('<' + ('B' * len(data)), data)
+    return struct.unpack('<' + ('B' * len(data)), data)
 
 def pkm2png(gen, data):
     """Convert a PKM file to a PNG image.
@@ -44,4 +44,19 @@ def png2pkm(data):
     """
     # PIL's Image module requires the data to be a string buffer in order
     # to open.
-    pass
+    imgbuffer = StringIO()
+    imgbuffer.write(data)
+
+    imgobj = Image.open(imgbuffer)
+
+    pixels = list(imgobj.getdata())
+
+    # The first pixel is header information, and the 'R' value of that
+    # header is the file's game generation.
+    generation = pixels[0][0]
+
+    bytedata = ''
+    for pixel in pixels[1:]:
+        bytedata += struct.pack('BBBB', *pixel)
+    
+    return (generation, bytedata)
